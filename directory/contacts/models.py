@@ -10,4 +10,4 @@ class Contact(models.Model):
     number = models.IntegerField()
 
     def __str__(self):
-        return self.name, self.number
+        return self.name
