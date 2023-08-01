@@ -12,6 +12,7 @@
     <h2>Inicio</h2>
     <ul>
         <li><a href={% url 'index' %}>Pagina Principal</a></li>
+        <li><a href={% url 'create' %}>Crear contactos</a></li>
         <li><a href={% url 'list' %}>Lista de contactos</a></li>
         {% if request.user.is_authenticated %}
             <li><a href={% url 'exit' %}>Salir</a></li>

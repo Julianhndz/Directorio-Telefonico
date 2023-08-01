@@ -1,0 +1,14 @@
+{% extends 'contacts/base.html' %}
+
+
+{% block content %}
+<h1>Creación de contactos</h1>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button>
+        Guardar Contacto
+    </button>
+</form>
+{% endblock content %}
+

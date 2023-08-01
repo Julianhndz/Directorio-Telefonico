@@ -2,12 +2,15 @@
 
 {% block content %}
 
-<h3>Lista de contactos</h3>
+<h2>Lista de contactos</h2>
 
-<p>Contacto 1</p>
-<p>Contacto 2</p>
-<p>Contacto 3</p>
-<p>Contacto 4</p>
+{% for contact in contacts %}
+
+<div>
+    <h4>{{ contact.name }}<br>{{ contact.number }}</h4>
+</div>
+    
+{% endfor %}
 
 
 {% endblock  %}
