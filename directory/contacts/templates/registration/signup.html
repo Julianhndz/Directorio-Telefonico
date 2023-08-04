@@ -1,0 +1,16 @@
+{% block content %}
+
+<h2>Registrate</h2>
+
+{{ error }}
+
+<form action="" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button>
+        Crear Usuario
+    </button>
+
+</form>
+
+{% endblock  %}
