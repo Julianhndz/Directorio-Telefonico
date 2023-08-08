@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm
@@ -59,11 +59,12 @@ def signup(request):
                 # Intenta creación de usuario, si no hay error se guarda en modelo User y se crea un usuario para uso.
                 user_creation = User.objects.create_user(username=request.POST["username"], password=request.POST["password1"])
                 user_creation.save()
-                redirect("contacts/index.html")
-            except:
-               # Se maneja el error de que el nombre del usuario sea igual a uno ya existente. Django hace la comparación de manera automatica, acá solamente mostramos un mensaje de error en pantalla.
+                login(request, user_creation)
+                return redirect("index")
+            except IntegrityError:
+               # Se maneja el error de que el nombre del usuario que se quiere crear sea igual a uno ya existente. Django hace la comparación de manera automatica, acá solamente mostramos un mensaje de error en pantalla.
                return render(request, "registration/signup.html", {"form": UserCreationForm,
-                                                            "error": "Usuario ya existe"})
+                                                                   "error": "Usuario ya existe"})
         # Retorna mensaje de error en caso de que la validación de las contraseñas de como resultado False.
         return render(request, "registration/signup.html", {"form": UserCreationForm,
                                                             "error": "Las contraseñas no coinciden."})    
