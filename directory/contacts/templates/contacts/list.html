@@ -3,14 +3,15 @@
 {% block content %}
 
 <h2>Lista de contactos</h2>
+{% if contacts %}
+    {% for contact in contacts %}
 
-{% for contact in contacts %}
-
-<div>
-    <h4>{{ contact.name }}<br>{{ contact.number }}</h4>
-</div>
-    
-{% endfor %}
-
-
+        <div>
+            <h4>{{ contact.name }}<br>{{ contact.number }}</h4>
+        </div>
+        
+    {% endfor %}
+{% else %}
+    <h4>No tienes contactos registrados</h4>
+{% endif %}
 {% endblock  %}
