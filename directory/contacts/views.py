@@ -1,14 +1,13 @@
 from django.shortcuts import render, redirect
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, logout
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from .models import Contact
 from .forms import CreateNewContact
 
 
-@login_required
 def index(request):
     """
     Vista pagina principal de proyecto.
@@ -16,6 +15,7 @@ def index(request):
     return render(request, "contacts/index.html")
 
 
+@login_required
 def contact_list(request):
     """
     Vista lista de contactos guardados.
@@ -30,6 +30,7 @@ def contact_list(request):
     return render(request, "contacts/list.html", {"contacts":contacts})
 
 
+@login_required
 def create_contact(request):
     """
     Vista de creación de contactos
@@ -68,6 +69,17 @@ def signup(request):
         # Retorna mensaje de error en caso de que la validación de las contraseñas de como resultado False.
         return render(request, "registration/signup.html", {"form": UserCreationForm,
                                                             "error": "Las contraseñas no coinciden."})    
+
+
+def log_in(request):
+    if request.method == "GET":
+        return render(request, "registration/login.html", {"form": AuthenticationForm})
+    else:
+        user = authenticate(request, username=request.POST["username"], password=request.POST["password"])
+        if user is None:
+            return render(request, "registration/login.html", {"form": AuthenticationForm,
+                                                               "error": "Usuario o Contraseña incorrectas"})
+        return render(request, "registration/login.html", {"form": AuthenticationForm})
 
 
 def exit(request):

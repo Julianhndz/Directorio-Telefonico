@@ -1,4 +1,4 @@
-{% comment %} {% extends 'contacts/base.html' %} {% endcomment %}
+{% extends 'contacts/base.html' %}
 
 {% block content %}
 
@@ -6,13 +6,12 @@
 <br>
 <h5>Iniciar Sesión</h5>
 
+{{ error }}
+
 <form action="" method="post">
     {% csrf_token %}
 
-    <input type="text" name="username" id="" placeholder="Nombre de Usuario">
-    <br>
-    <input type="password" name="password" id="" placeholder="Contraseña">
-    <br><br>
+    {{ form.as_p }}
     <button type="submit">Iniciar Sesión</button>
     <button type="button" onclick="window.location.href='/signup/'">Registrate</button>
 
