@@ -5,11 +5,13 @@
 <h2>Lista de contactos</h2>
 {% if contacts %}
     {% for contact in contacts %}
-
+    <a href="{% url 'contact_detail' contact.id %}">
+        
         <div>
             <h4>{{ contact.name }}<br>{{ contact.number }}</h4>
         </div>
         
+    </a>
     {% endfor %}
 {% else %}
     <h4>No tienes contactos registrados</h4>

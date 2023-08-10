@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from .models import Contact
-from .forms import CreateNewContact
+from .forms import CreateContactForm
 
 
 def index(request):
@@ -30,6 +30,27 @@ def contact_list(request):
     return render(request, "contacts/list.html", {"contacts":contacts})
 
 
+def contact_detail(request, contact_id):
+    """
+    Vista y lógica de detalles y actualización de contacto.
+    """
+    if request.method == "GET":
+        contact = get_object_or_404(Contact, pk=contact_id, users=request.user)
+        form = CreateContactForm(instance=contact)
+        return render(request, "contacts/contact_detail.html", {"contact" : contact,
+                                                                "form": form})
+    else:
+        try:
+            contact = get_object_or_404(Contact, pk=contact_id, users=request.user)
+            form = CreateContactForm(request.POST, instance=contact)
+            form.save()
+            return redirect("/list")
+        except ValueError:
+            return render(request, "contacts/contact_detail.html", {"contact" : contact, # type: ignore
+                                                                    "form": form, # type: ignore
+                                                                    "error": "Error actualizando contacto"})
+
+
 @login_required
 def create_contact(request):
     """
@@ -37,7 +58,7 @@ def create_contact(request):
     """
     if request.method == "GET":
         # Muestra formulario para creación de contacto
-        return render(request, "contacts/create_contact.html", {"form": CreateNewContact()})
+        return render(request, "contacts/create_contact.html", {"form": CreateContactForm()})
     else:
         # Creación de contacto asociandolo al usuario que este autenticado
         new_contact = Contact.objects.create(name=request.POST["name"], number=request.POST["number"])
@@ -72,6 +93,9 @@ def signup(request):
 
 
 def log_in(request):
+    """
+    Función de inicio de sesión.
+    """
     if request.method == "GET":
         return render(request, "registration/login.html", {"form": AuthenticationForm})
     else:
