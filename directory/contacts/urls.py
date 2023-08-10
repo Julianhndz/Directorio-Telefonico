@@ -8,6 +8,7 @@ urlpatterns = [
     path("login/", views.log_in, name="login"),
     path("list/", views.contact_list, name="list"),
     path("list/<int:contact_id>/", views.contact_detail, name="contact_detail"),
+    path("list/<int:contact_id>/delete/", views.delete_contact, name="delete_contact"), # type: ignore
     path("logout/", views.exit, name="exit"),
     path("create_contact/", views.create_contact, name="create"),
 ]

@@ -30,6 +30,22 @@ def contact_list(request):
     return render(request, "contacts/list.html", {"contacts":contacts})
 
 
+@login_required
+def create_contact(request):
+    """
+    Vista de creación de contactos
+    """
+    if request.method == "GET":
+        # Muestra formulario para creación de contacto
+        return render(request, "contacts/create_contact.html", {"form": CreateContactForm()})
+    else:
+        # Creación de contacto asociandolo al usuario que este autenticado
+        new_contact = Contact.objects.create(name=request.POST["name"], number=request.POST["number"])
+        # Asociación al usuario mediante la tabla intermedia ContactUser
+        new_contact.users.add(request.user)
+        return redirect("/list")
+
+
 def contact_detail(request, contact_id):
     """
     Vista y lógica de detalles y actualización de contacto.
@@ -51,19 +67,10 @@ def contact_detail(request, contact_id):
                                                                     "error": "Error actualizando contacto"})
 
 
-@login_required
-def create_contact(request):
-    """
-    Vista de creación de contactos
-    """
-    if request.method == "GET":
-        # Muestra formulario para creación de contacto
-        return render(request, "contacts/create_contact.html", {"form": CreateContactForm()})
-    else:
-        # Creación de contacto asociandolo al usuario que este autenticado
-        new_contact = Contact.objects.create(name=request.POST["name"], number=request.POST["number"])
-        # Asociación al usuario mediante la tabla intermedia ContactUser
-        new_contact.users.add(request.user)
+def delete_contact(request, contact_id):
+    contact = get_object_or_404(Contact, pk=contact_id, users=request.user)
+    if request.method == "POST":
+        contact.delete()
         return redirect("/list")
 
 

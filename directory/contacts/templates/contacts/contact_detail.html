@@ -12,4 +12,11 @@
         </button>
     </form>
     
+<form action="{% url 'delete_contact' contact.id %}" method="POST">
+    {% csrf_token %}
+    <button>
+        Eliminar Contacto
+    </button>
+</form>
+
 {% endblock %}
