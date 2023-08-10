@@ -45,7 +45,7 @@ def create_contact(request):
         new_contact.users.add(request.user)
         return redirect("/list")
 
-
+@login_required
 def contact_detail(request, contact_id):
     """
     Vista y lógica de detalles y actualización de contacto.
@@ -66,7 +66,7 @@ def contact_detail(request, contact_id):
                                                                     "form": form, # type: ignore
                                                                     "error": "Error actualizando contacto"})
 
-
+@login_required # type: ignore
 def delete_contact(request, contact_id):
     contact = get_object_or_404(Contact, pk=contact_id, users=request.user)
     if request.method == "POST":
